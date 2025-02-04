@@ -1,19 +1,16 @@
 /*
 Name: 			View - Contact
 Written by: 	Okler Themes - (http://www.okler.net)
-Theme Version:	9.6.0
+Theme Version:	12.0.0
 */
 
-(function($) {
-
-	'use strict';
-
-	/*
+(($ => {
+    /*
 	Custom Rules
 	*/
-	
-	// No White Space
-	$.validator.addMethod("noSpace", function(value, element) {
+
+    // No White Space
+    $.validator.addMethod("noSpace", (value, element) => {
 		if( $(element).attr('required') ) {
 			return value.search(/^(?! *$)[^]+$/) == 0;
 		}
@@ -21,21 +18,21 @@ Theme Version:	9.6.0
 		return true;
 	}, 'Please fill this empty field.');
 
-	/*
+    /*
 	Assign Custom Rules on Fields
 	*/
-	$.validator.addClassRules({
+    $.validator.addClassRules({
 	    'form-control': {
 	        noSpace: true
 	    }
 	});
 
-	/*
+    /*
 	Contact Form: Basic
 	*/
-	$('.contact-form').each(function(){
+    $('.contact-form').each(function(){
 		$(this).validate({
-			errorPlacement: function(error, element) {
+			errorPlacement(error, element) {
 				if(element.attr('type') == 'radio' || element.attr('type') == 'checkbox') {
 					error.appendTo(element.closest('.form-group'));
 				} else if( element.is('select') && element.closest('.custom-select-1') ) {
@@ -48,26 +45,20 @@ Theme Version:	9.6.0
 					}
 				}
 			},
-			submitHandler: function(form) {
+			submitHandler(form) {
 
-				var $form = $(form),
-					$messageSuccess = $form.find('.contact-form-success'),
-					$messageError = $form.find('.contact-form-error'),
-					$submitButton = $(this.submitButton),
-					$errorMessage = $form.find('.mail-error-message'),
-					submitButtonText = $submitButton.val();
+				const $form = $(form), $messageSuccess = $form.find('.contact-form-success'), $messageError = $form.find('.contact-form-error'), $submitButton = $(this.submitButton), $errorMessage = $form.find('.mail-error-message'), submitButtonText = $submitButton.val();
 
 				$submitButton.val( $submitButton.data('loading-text') ? $submitButton.data('loading-text') : 'Loading...' ).attr('disabled', true);
 
 				// Fields Data
-				var formData = $form.serializeArray(),
-					data = {};
+				const formData = $form.serializeArray(), data = {};
 
-				$(formData).each(function(index, obj){
-					if( data[obj.name] ) {
-						data[obj.name] = data[obj.name] + ', ' + obj.value;						
+				$(formData).each((index, {name, value}) => {
+					if( data[name] ) {
+						data[name] = data[name] + ', ' + value;						
 					} else {
-						data[obj.name] = obj.value;
+						data[name] = value;
 					}
 				});
 
@@ -80,12 +71,12 @@ Theme Version:	9.6.0
 				$.ajax({
 					type: 'POST',
 					url: $form.attr('action'),
-					data: data
-				}).always(function(data, textStatus, jqXHR) {
+					data
+				}).always(({response, errorMessage, responseText}, textStatus, jqXHR) => {
 
 					$errorMessage.empty().hide();
 
-					if (data.response == 'success') {
+					if (response == 'success') {
 
 						// Uncomment the code below to redirect for a thank you page
 						// self.location = 'thank-you.html';
@@ -115,10 +106,10 @@ Theme Version:	9.6.0
 						
 						return;
 
-					} else if (data.response == 'error' && typeof data.errorMessage !== 'undefined') {
-						$errorMessage.html(data.errorMessage).show();
+					} else if (response == 'error' && typeof errorMessage !== 'undefined') {
+						$errorMessage.html(errorMessage).show();
 					} else {
-						$errorMessage.html(data.responseText).show();
+						$errorMessage.html(responseText).show();
 					}
 
 					$messageError.removeClass('d-none');
@@ -140,10 +131,10 @@ Theme Version:	9.6.0
 		});
 	});
 
-	/*
+    /*
 	Contact Form: Advanced
 	*/
-	$('#contactFormAdvanced').validate({
+    $('#contactFormAdvanced').validate({
 		onkeyup: false,
 		onclick: false,
 		onfocusout: false,
@@ -158,7 +149,7 @@ Theme Version:	9.6.0
 				required: true
 			}
 		},
-		errorPlacement: function(error, element) {
+		errorPlacement(error, element) {
 			if(element.attr('type') == 'radio' || element.attr('type') == 'checkbox') {
 				error.appendTo(element.closest('.form-group'));
 			} else if( element.is('select') && element.closest('.custom-select-1') ) {
@@ -169,12 +160,12 @@ Theme Version:	9.6.0
 		}
 	});
 
-	/*
+    /*
 	Contact Form: reCaptcha v3
 	*/
-	$('.contact-form-recaptcha-v3').each(function(){
+    $('.contact-form-recaptcha-v3').each(function(){
 		$(this).validate({
-			errorPlacement: function(error, element) {
+			errorPlacement(error, element) {
 				if(element.attr('type') == 'radio' || element.attr('type') == 'checkbox') {
 					error.appendTo(element.closest('.form-group'));
 				} else if( element.is('select') && element.closest('.custom-select-1') ) {
@@ -183,29 +174,21 @@ Theme Version:	9.6.0
 					error.insertAfter(element);
 				}
 			},
-			submitHandler: function(form) {
+			submitHandler(form) {
 
-				var $form = $(form),
-					$messageSuccess = $form.find('.contact-form-success'),
-					$messageError = $form.find('.contact-form-error'),
-					$submitButton = $(this.submitButton),
-					$errorMessage = $form.find('.mail-error-message'),
-					submitButtonText = $submitButton.val();
+				const $form = $(form), $messageSuccess = $form.find('.contact-form-success'), $messageError = $form.find('.contact-form-error'), $submitButton = $(this.submitButton), $errorMessage = $form.find('.mail-error-message'), submitButtonText = $submitButton.val();
 
 				$submitButton.val( $submitButton.data('loading-text') ? $submitButton.data('loading-text') : 'Loading...' ).attr('disabled', true);
 
-				var recaptchaSrcURL = $('#google-recaptcha-v3').attr('src'),
-					newURL          = new URL(recaptchaSrcURL),
-					site_key        = newURL.searchParams.get("render");
+				const recaptchaSrcURL = $('#google-recaptcha-v3').attr('src'), newURL          = new URL(recaptchaSrcURL), site_key        = newURL.searchParams.get("render");
 
-				grecaptcha.execute(site_key, {action: 'contact_us'}).then(function(token) {
+				grecaptcha.execute(site_key, {action: 'contact_us'}).then(token => {
 
 					// Fields Data
-					var formData = $form.serializeArray(),
-						data = {};
+					const formData = $form.serializeArray(), data = {};
 
-					$(formData).each(function(index, obj){
-					    data[obj.name] = obj.value;
+					$(formData).each((index, {name, value}) => {
+					    data[name] = value;
 					});
 
 					// Recaptcha v3 Token
@@ -215,12 +198,12 @@ Theme Version:	9.6.0
 					$.ajax({
 						type: 'POST',
 						url: $form.attr('action'),
-						data: data
-					}).always(function(data, textStatus, jqXHR) {
+						data
+					}).always(({response, errorMessage, responseText}, textStatus, jqXHR) => {
 
 						$errorMessage.empty().hide();
 
-						if (data.response == 'success') {
+						if (response == 'success') {
 
 							// Uncomment the code below to redirect for a thank you page
 							// self.location = 'thank-you.html';
@@ -250,10 +233,10 @@ Theme Version:	9.6.0
 							
 							return;
 
-						} else if (data.response == 'error' && typeof data.errorMessage !== 'undefined') {
-							$errorMessage.html(data.errorMessage).show();
+						} else if (response == 'error' && typeof errorMessage !== 'undefined') {
+							$errorMessage.html(errorMessage).show();
 						} else {
-							$errorMessage.html(data.responseText).show();
+							$errorMessage.html(responseText).show();
 						}
 
 						$messageError.removeClass('d-none');
@@ -276,5 +259,4 @@ Theme Version:	9.6.0
 			}
 		});
 	});
-
-}).apply(this, [jQuery]);
+})).apply(this, [jQuery]);

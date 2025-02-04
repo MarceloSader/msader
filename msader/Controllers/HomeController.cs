@@ -16,7 +16,13 @@ namespace msader.Controllers
         public IActionResult Index()
         {
             /// teste 
-            return View();
+            return View("Index");
+        }
+
+        public IActionResult Projeto()
+        {
+            /// teste 
+            return View("Projeto");
         }
 
         public IActionResult Privacy()

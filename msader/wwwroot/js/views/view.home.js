@@ -1,22 +1,19 @@
 /*
 Name: 			View - Home
 Written by: 	Okler Themes - (http://www.okler.net)
-Theme Version:	9.6.0
+Theme Version:	12.0.0
 */
 
-(function($) {
-
-	'use strict';
-
-	/*
+(($ => {
+    /*
 	Circle Slider
 	*/
-	if ($.isFunction($.fn.flipshow)) {
-		var circleContainer = $('.fc-slideshow');
+    if ($.isFunction($.fn.flipshow)) {
+		const circleContainer = $('.fc-slideshow');
 	
 		$.each( circleContainer, function() {
 				
-			var $container = $(this);
+			const $container = $(this);
 				
 			$container.flipshow();
 
@@ -28,17 +25,17 @@ Theme Version:	9.6.0
 		});
 	}
 
-	/*
+    /*
 	Move Cloud
 	*/
-	if ($('.cloud').get(0)) {
-		var moveCloud = function() {
+    if ($('.cloud').get(0)) {
+		const moveCloud = () => {
 			$('.cloud').animate({
 				'top': '+=20px'
-			}, 3000, 'linear', function() {
+			}, 3000, 'linear', () => {
 				$('.cloud').animate({
 					'top': '-=20px'
-				}, 3000, 'linear', function() {
+				}, 3000, 'linear', () => {
 					moveCloud();
 				});
 			});
@@ -46,5 +43,4 @@ Theme Version:	9.6.0
 
 		moveCloud();
 	}
-
-}).apply(this, [jQuery]);
+})).apply(this, [jQuery]);

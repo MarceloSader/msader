@@ -1,52 +1,28 @@
 /*
 Name: 			View - Shop
 Written by: 	Okler Themes - (http://www.okler.net)
-Theme Version:	9.6.0
+Theme Version:	12.0.0
 */
 
-(function($) {
-
-	'use strict';
-
-	/*
+(($ => {
+    /*
 	* Quantity
 	*/
     $( document ).on('click', '.quantity .plus',function(){
-        var $qty=$(this).parents('.quantity').find('.qty');
-        var currentVal = parseInt($qty.val());
+        const $qty=$(this).parents('.quantity').find('.qty');
+        const currentVal = parseInt($qty.val());
         if (!isNaN(currentVal)) {
             $qty.val(currentVal + 1);
         }
     });
 
     $( document ).on('click', '.quantity .minus',function(){
-        var $qty=$(this).parents('.quantity').find('.qty');
-        var currentVal = parseInt($qty.val());
+        const $qty=$(this).parents('.quantity').find('.qty');
+        const currentVal = parseInt($qty.val());
         if (!isNaN(currentVal) && currentVal > 1) {
             $qty.val(currentVal - 1);
         }
     });
-
-    /*
-    * Image Gallery Zoom
-    */
-    if($.fn.elevateZoom) {
-        if( $('[data-zoom-image]').get(0) ) {
-            $('[data-zoom-image]').each(function(){
-                var $this = $(this);
-
-                $this.elevateZoom({
-                    responsive: true,
-                    zoomWindowFadeIn: 350,
-                    zoomWindowFadeOut: 200,
-                    borderSize: 0,
-                    zoomContainer: $this.parent(),
-                    zoomType: 'inner',
-                    cursor: 'grab'
-                });
-            });
-        }
-    }
 
     /*
     * Quick View Lightbox/Popup With Ajax
@@ -62,28 +38,28 @@ Theme Version:	9.6.0
         removalDelay: 300,
         mainClass: '',
         callbacks: {
-            open: function() {
+            open() {
                 $('html').addClass('lightbox-opened');
             },
-            close: function() {
+            close() {
                 $('html').removeClass('lightbox-opened');
-                setTimeout(function(){
+                setTimeout(() => {
                     $('html').removeClass('lightbox-beforeclose');
                 }, 500);
             },
-            beforeClose: function() {
+            beforeClose() {
                 $('html').addClass('lightbox-beforeclose');
             },
-            ajaxContentAdded: function() {
+            ajaxContentAdded() {
 
                 /*
                 Thumb Gallery
                 */
                 $('.thumb-gallery-wrapper').each(function(){
-                    var $thumbGalleryDetail = $(this).find('.thumb-gallery-detail'),
-                        $thumbGalleryThumbs = $(this).find('.thumb-gallery-thumbs'),
-                        flag = false,
-                        duration = 300;
+                    const $thumbGalleryDetail = $(this).find('.thumb-gallery-detail');
+                    const $thumbGalleryThumbs = $(this).find('.thumb-gallery-thumbs');
+                    let flag = false;
+                    const duration = 300;
 
                     $thumbGalleryDetail
                         .owlCarousel({
@@ -96,18 +72,18 @@ Theme Version:	9.6.0
                             navText: [],
                             rtl: ( $('html').attr('dir') == 'rtl' ) ? true : false
                         })
-                        .on('changed.owl.carousel', function(e) {
+                        .on('changed.owl.carousel', ({item}) => {
                             if (!flag) {
                                 flag = true;
-                                $thumbGalleryThumbs.trigger('to.owl.carousel', [e.item.index-1, duration, true]);
+                                $thumbGalleryThumbs.trigger('to.owl.carousel', [item.index-1, duration, true]);
 
                                 $thumbGalleryThumbs.find('.owl-item').removeClass('selected');
-                                $thumbGalleryThumbs.find('.owl-item').eq( e.item.index ).addClass('selected');
+                                $thumbGalleryThumbs.find('.owl-item').eq( item.index ).addClass('selected');
                                 flag = false;
                             }
                         });
 
-                    
+
                     $thumbGalleryThumbs
                         .owlCarousel({
                             margin: 15,
@@ -120,51 +96,28 @@ Theme Version:	9.6.0
                         .on('click', '.owl-item', function() {
                             $thumbGalleryDetail.trigger('to.owl.carousel', [$(this).index(), duration, true]);
                         })
-                        .on('changed.owl.carousel', function(e) {
+                        .on('changed.owl.carousel', ({item}) => {
                             if (!flag) {
                                 flag = true;
-                                $thumbGalleryDetail.trigger('to.owl.carousel', [e.item.index, duration, true]);
+                                $thumbGalleryDetail.trigger('to.owl.carousel', [item.index, duration, true]);
                                 flag = false;
                             }
                         });
 
                     $thumbGalleryThumbs.find('.owl-item').eq(0).addClass('selected');
-                        
-
                 });
-
-                /*
-                * Image Gallery Zoom
-                */
-                if($.fn.elevateZoom) {
-                    if( $('[data-zoom-image]').get(0) ) {
-                        $('[data-zoom-image]').each(function(){
-                            var $this = $(this);
-
-                            $this.elevateZoom({
-                                responsive: true,
-                                zoomWindowFadeIn: 350,
-                                zoomWindowFadeOut: 200,
-                                borderSize: 0,
-                                zoomContainer: $this.parent(),
-                                zoomType: 'inner',
-                                cursor: 'grab'
-                            });
-                        });
-                    }
-                }
 
                 /*
                 * Star Rating
                 */ 
                 if ($.isFunction($.fn['themePluginStarRating'])) {
 
-                    $(function() {
+                    $(() => {
                         $('[data-plugin-star-rating]:not(.manual)').each(function() {
-                            var $this = $(this),
-                                opts;
+                            const $this = $(this);
+                            let opts;
 
-                            var pluginOptions = theme.fn.getOptions($this.data('plugin-options'));
+                            const pluginOptions = theme.fn.getOptions($this.data('plugin-options'));
                             if (pluginOptions)
                                 opts = pluginOptions;
 
@@ -177,5 +130,4 @@ Theme Version:	9.6.0
             }
         }
     });
-
-}).apply(this, [jQuery]);
+})).apply(this, [jQuery]);
